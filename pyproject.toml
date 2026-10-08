@@ -14,7 +14,7 @@ dependencies = ["cryptography"]
 dev = ["pytest", "ruff"]
 
 [project.scripts]
-amw-verify = "amw_demo.cli:main"
+amw-demo = "amw_demo.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["amw_demo*"]

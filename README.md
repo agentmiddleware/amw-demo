@@ -1,10 +1,14 @@
 # amw-demo
 
-Agent Middleware (AMW) is a hosted gateway that sits between AI agents and the tools they call. An agent gets a signed permit that scopes what it may do, calls the tool through the gateway, and gets back a signed receipt that anyone can check offline. This repo shows that loop in a few minutes using only the public API.
+Agent Middleware (AMW) is a hosted gateway that sits between AI agents and the tools they call. An agent gets a signed permit that scopes what it may do, calls the tool through the gateway, and gets back a signed receipt that can be checked offline against the published public key. This repo shows that loop in a few minutes using only the public API.
 
 ## Quickstart (under 5 minutes)
 
+Needs Python 3.10 or newer.
+
 ```bash
+git clone https://github.com/agentmiddleware/amw-demo.git
+cd amw-demo
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -38,6 +42,9 @@ You can also verify any receipt file directly:
 python -m amw_demo verify receipt.json --keys trust-keys.json [--issuer URL]
 ```
 
+After `pip install -e .` the `amw-demo` console script is installed, so
+`amw-demo verify receipt.json --keys trust-keys.json` works the same way.
+
 Exit code 0 means verified, 1 means signature invalid, 2 means it cannot
 be determined (for example an unknown key id or an unreadable file).
 
@@ -64,7 +71,7 @@ invoke, and receipt export all return 401 without an operator-issued key.
 To run the full loop, ask the operator for a wallet-scoped key as described
 in [KEY_PATH_PROPOSAL.md](KEY_PATH_PROPOSAL.md). If `AMW_API_KEY` is missing,
 the example prints these instructions and exits without making any
-authenticated calls.
+authenticated calls. The published receipt check above works today with no key.
 
 ## Limits
 

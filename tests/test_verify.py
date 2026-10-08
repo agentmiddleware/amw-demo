@@ -1,6 +1,7 @@
 """Offline tests for the receipt verifier."""
 
 import copy
+import hashlib
 import json
 import os
 
@@ -107,6 +108,52 @@ def test_payload_hash_mismatch_detected():
     result = verify_receipt(forged, forged_keys)
     assert not result.ok
     assert "payload_hash" in result.reason
+
+
+@pytest.mark.parametrize("ensure_ascii", [True, False])
+def test_non_ascii_payload_hash_accepts_both_forms(ensure_ascii):
+    import base64
+
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PrivateKey,
+    )
+    from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+
+    private_key = Ed25519PrivateKey.generate()
+    public_b64 = base64.b64encode(
+        private_key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
+    ).decode("ascii")
+    rest = {
+        "receipt_id": "rcpt-nonascii",
+        "tool": "partner.echo",
+        "message": "h\u00e9llo w\u00f6rld \u2713",
+    }
+    canonical = json.dumps(
+        rest, sort_keys=True, separators=(",", ":"), ensure_ascii=ensure_ascii
+    )
+    claims = dict(rest)
+    claims["payload_hash"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    signing_input = json.dumps(claims, sort_keys=True, separators=(",", ":"))
+    signed = {
+        "receipt_id": "rcpt-nonascii",
+        "issuer": "https://api.thisisatest.tech",
+        "kid": "nonascii-test-key",
+        "signing_input": signing_input,
+        "signature": base64.b64encode(
+            private_key.sign(signing_input.encode("utf-8"))
+        ).decode("ascii"),
+    }
+    signed_keys = {
+        "keys": [
+            {
+                "kid": "nonascii-test-key",
+                "status": "active",
+                "public_key_b64": public_b64,
+            }
+        ]
+    }
+    result = verify_receipt(signed, signed_keys)
+    assert result.ok, result.reason
 
 
 def test_issuer_mismatch(receipt, keys):

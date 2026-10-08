@@ -135,9 +135,15 @@ def verify_receipt(
     payload_hash = claims.get("payload_hash")
     if payload_hash is not None:
         rest = {k: v for k, v in claims.items() if k != "payload_hash"}
-        canonical = json.dumps(rest, sort_keys=True, separators=(",", ":"))
-        digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-        if digest != payload_hash:
+        ascii_form = json.dumps(rest, sort_keys=True, separators=(",", ":"))
+        text_form = json.dumps(
+            rest, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
+        digests = {
+            hashlib.sha256(ascii_form.encode("utf-8")).hexdigest(),
+            hashlib.sha256(text_form.encode("utf-8")).hexdigest(),
+        }
+        if payload_hash not in digests:
             return VerificationResult(
                 ok=False,
                 reason="payload_hash mismatch: signing_input does not match its hash",

@@ -31,8 +31,14 @@ These would make demo keys safer to hand out. Each is a proposal:
 
 - A key-level tool allowlist, so the key itself cannot touch anything but `partner.echo`, even if someone crafts a broader permit request.
 - A flag on demo wallets that blocks permit creation for other tools or for budgets above a small ceiling, enforced before any reservation or dispatch.
-- A separate demo tenant (own wallets, own budget pool), so demo traffic can never spend partner funds or pollute partner audit chains.
+- A separate demo tenant (own wallets, own budget pool), so demo traffic cannot spend partner funds or mix into partner audit chains.
 - Automated key rotation and expiry reminders, so stale demo keys stop working without manual cleanup.
 - Abuse monitoring on demo wallets: alert on spend velocity, permit volume, or repeated 401 and 403 responses, and freeze on thresholds already used for wallets.
 
 Until those exist, keep demo bounds small, windows short, and issuance manual.
+
+## What we need from the operator
+
+- Decide whether demo readers get per-person keys issued on request or share one rotating key.
+- Pick the bounds for demo keys: credit budget, daily limit, expiry, and max uses.
+- Confirm `partner.echo` is registered and reachable in production for demo wallets.

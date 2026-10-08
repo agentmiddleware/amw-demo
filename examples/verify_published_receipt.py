@@ -68,7 +68,7 @@ def main(argv: list | None = None) -> int:
         return 1
 
     print()
-    print("Verified. The published receipt is a real signed receipt from AMW.")
+    print("Verified. The signature matches the published key snapshot.")
     print()
     print("What this shows:")
     print(f"  - Receipt {result.receipt_id} was signed by key {result.kid}.")
