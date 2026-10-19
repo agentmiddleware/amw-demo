@@ -66,10 +66,9 @@ side effect here.
 
 ## Getting a key
 
-There is no public self-serve key today, and the tool catalog, permits,
-invoke, and receipt export all return 401 without an operator-issued key.
-To run the full loop, ask the operator for a wallet-scoped key as described
-in [KEY_PATH_PROPOSAL.md](KEY_PATH_PROPOSAL.md). If `AMW_API_KEY` is missing,
+The demo key page https://www.thisisatest.tech/demo-key/ issues demo keys
+(demo tenant, synthetic credits, no account needed). Export the key as
+`AMW_API_KEY` to run the full loop. If `AMW_API_KEY` is missing,
 the example prints these instructions and exits without making any
 authenticated calls. The published receipt check above works today with no key.
 
@@ -91,4 +90,5 @@ These apply to AMW itself, not just this demo:
 - Security limitations: https://api.thisisatest.tech/SECURITY_LIMITATIONS.md
 
 This repo speaks only to the public API above. It bundles no private code
-and needs no private access except the operator-issued key for the full loop.
+and needs no private access except a demo key from the demo key page for
+the full loop.
