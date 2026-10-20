@@ -1,7 +1,7 @@
 """Verify the published AMW receipt. No API key needed.
 
 Downloads the portable receipt and key snapshot published at
-https://www.thisisatest.tech/proof/ and checks the signature offline.
+https://www.agentmiddleware.dev/proof/ and checks the signature offline.
 Pass --offline to use the bundled test fixtures instead of the network.
 """
 
@@ -13,8 +13,8 @@ import os
 import sys
 import urllib.request
 
-RECEIPT_URL = "https://www.thisisatest.tech/proof/receipt.json"
-KEYS_URL = "https://www.thisisatest.tech/proof/trust-keys.json"
+RECEIPT_URL = "https://www.agentmiddleware.dev/proof/receipt.json"
+KEYS_URL = "https://www.agentmiddleware.dev/proof/trust-keys.json"
 EXPECTED_ISSUER = "https://api.thisisatest.tech"
 
 FIXTURE_DIR = os.path.join(os.path.dirname(__file__), "..", "tests", "fixtures")

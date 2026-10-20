@@ -21,7 +21,7 @@ python examples/verify_published_receipt.py
 ```
 
 That downloads a real portable receipt and key snapshot published at
-https://www.thisisatest.tech/proof/ and checks the signature offline.
+https://www.agentmiddleware.dev/proof/ and checks the signature offline.
 Fully offline alternative:
 
 ```bash
@@ -66,7 +66,7 @@ side effect here.
 
 ## Getting a key
 
-The demo key page https://www.thisisatest.tech/demo-key/ issues demo keys
+The demo key page https://www.agentmiddleware.dev/demo-key/ issues demo keys
 (demo tenant, synthetic credits, no account needed). Export the key as
 `AMW_API_KEY` to run the full loop. If `AMW_API_KEY` is missing,
 the example prints these instructions and exits without making any
