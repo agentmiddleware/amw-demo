@@ -92,3 +92,11 @@ These apply to AMW itself, not just this demo:
 This repo speaks only to the public API above. It bundles no private code
 and needs no private access except a demo key from the demo key page for
 the full loop.
+
+## License
+
+This repository is licensed under the Apache License, Version 2.0. See
+[LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+The AMW gateway is Fair Source (FSL-1.1-ALv2), see
+https://github.com/agentmiddleware/agent-middleware.
