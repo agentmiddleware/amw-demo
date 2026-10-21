@@ -2,7 +2,7 @@
 
 Only speaks the public API described by the live OpenAPI document at
 https://api.thisisatest.tech/openapi.json. Authentication uses an
-operator-issued key read from the AMW_API_KEY environment variable.
+API key read from the AMW_API_KEY environment variable.
 """
 
 from __future__ import annotations
@@ -15,8 +15,8 @@ import urllib.request
 DEFAULT_BASE_URL = "https://api.thisisatest.tech"
 
 _GETTING_KEY_HINT = (
-    "AMW has no public self-serve key. See KEY_PATH_PROPOSAL.md and "
-    'the "Getting a key" section of the README for how to request one.'
+    "Get a demo key at https://www.agentmiddleware.dev/demo-key/. "
+    'The page uses POST /v1/demo/keys. See "Getting a key" in the README.'
 )
 
 
@@ -47,7 +47,7 @@ def _read_json_response(response) -> dict | list:
 def _friendly_message(status: int, detail, url: str) -> str:
     if status == 401:
         return (
-            f"AMW returned 401 for {url}: an operator-issued API key is "
+            f"AMW returned 401 for {url}: an API key is "
             f"required. Set AMW_API_KEY and retry. {_GETTING_KEY_HINT} "
             f"Server detail: {detail}"
         )
@@ -109,7 +109,7 @@ class AmwClient:
         return self._request("GET", "/health")
 
     def trust_keys(self) -> dict:
-        """Return the public signing-key set. No key needed."""
+        """Return the public signing key set. No key needed."""
         return self._request("GET", "/.well-known/trust-keys.json")
 
     def create_permit(
@@ -122,7 +122,7 @@ class AmwClient:
         scopes: list | None = None,
         idempotency_key: str | None = None,
     ) -> dict:
-        """Create a scoped permit. Requires an operator-issued key."""
+        """Create a scoped permit. Requires an API key."""
         body = {
             "issuer_wallet_id": issuer_wallet_id,
             "subject_wallet_id": subject_wallet_id,
@@ -147,7 +147,7 @@ class AmwClient:
         idempotency_key: str,
         service_id: str | None = None,
     ) -> dict:
-        """Call a tool through the gateway. Requires an operator-issued key."""
+        """Call a tool through the gateway. Requires an API key."""
         target = service_id or tool
         body = {
             "name": tool,
@@ -162,7 +162,7 @@ class AmwClient:
         return self._request("POST", path, body=body)
 
     def portable_receipt(self, receipt_id: str) -> dict:
-        """Fetch the portable receipt bundle. Requires an operator-issued key."""
+        """Fetch the portable receipt bundle. Requires an API key."""
         return self._request("GET", f"/v1/receipts/{receipt_id}/portable")
 
 
@@ -192,5 +192,5 @@ def extract_receipt_id(invoke_response: dict) -> str:
     raise AmwError(
         "Invoke response contained no receipt id "
         "(looked in receipt.receipt_id, receipt.id, "
-        "structuredContent.receipt_id, and top-level receipt_id)."
+        "structuredContent.receipt_id, and top level receipt_id)."
     )

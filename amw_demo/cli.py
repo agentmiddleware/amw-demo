@@ -26,7 +26,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
     try:
         keys = _load_json(args.keys)
     except (OSError, ValueError) as exc:
-        print(f"Cannot read trust-keys file: {exc}", file=sys.stderr)
+        print(f"Cannot read trust keys file: {exc}", file=sys.stderr)
         return 2
     result = verify_receipt(receipt, keys, expected_issuer=args.issuer)
     if result.ok:
@@ -48,7 +48,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     verify = sub.add_parser("verify", help="Verify a portable receipt offline")
     verify.add_argument("receipt", help="Path to a portable receipt JSON file")
-    verify.add_argument("--keys", required=True, help="Path to a trust-keys JSON file")
+    verify.add_argument("--keys", required=True, help="Path to a trust keys JSON file")
     verify.add_argument("--issuer", default=None, help="Expected issuer URL")
     verify.set_defaults(func=cmd_verify)
     return parser

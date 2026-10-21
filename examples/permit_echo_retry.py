@@ -1,4 +1,4 @@
-"""Full AMW loop: permit, echo call, same-key retry, offline verification.
+"""Full AMW loop: permit, echo call, retry with the same key, offline verification.
 
 Needs AMW_API_KEY and AMW_WALLET_ID in the environment (see .env.example).
 Optional: AMW_ISSUER_WALLET_ID (defaults to AMW_WALLET_ID) and AMW_BASE_URL.
@@ -100,9 +100,10 @@ def main() -> int:
     api_key = _env("AMW_API_KEY")
     wallet_id = _env("AMW_WALLET_ID")
     if not api_key or not wallet_id:
-        print("This example needs an operator-issued API key and a wallet id.")
-        print("There is no self-serve key today. To get one, see KEY_PATH_PROPOSAL.md")
-        print("and the 'Getting a key' section of the README, then set:")
+        print("This example needs a demo API key and a wallet id.")
+        print("Get a key at https://www.agentmiddleware.dev/demo-key/.")
+        print("The page uses POST /v1/demo/keys. See 'Getting a key' in the README,")
+        print("then set:")
         print("  export AMW_API_KEY='<your key>'")
         print("  export AMW_WALLET_ID='<your wallet id>'")
         return 2
@@ -118,7 +119,7 @@ def main() -> int:
     ).isoformat()
 
     try:
-        print(f"1. Creating a short-lived permit scoped to {TOOL} with a small budget ...")
+        print(f"1. Creating a temporary permit scoped to {TOOL} with a small budget ...")
         permit = client.create_permit(
             issuer_wallet_id=issuer_wallet_id,
             subject_wallet_id=wallet_id,
@@ -169,10 +170,8 @@ def main() -> int:
             )
             return 1
         print(
-            "   Identical receipt id. A retry with the same idempotency key "
-            "and the same request returns the original signed receipt. "
-            "The tool is not called again and the wallet is not charged again. "
-            "A new key would be a new call."
+            "   a retry with the same key returns the original receipt "
+            "instead of dispatching again."
         )
 
         print("4. Fetching the portable receipt and verifying it offline ...")
