@@ -28,6 +28,15 @@ Fully offline alternative:
 python examples/verify_published_receipt.py --offline
 ```
 
+Get a free demo key (no account needed) at
+https://www.agentmiddleware.dev/demo-key/ or from a terminal:
+
+```bash
+curl -s -X POST https://api.thisisatest.tech/v1/demo/keys
+```
+
+The response includes `api_key` and `wallet_id`.
+
 Have a key? Run the full loop:
 
 ```bash
