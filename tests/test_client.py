@@ -130,7 +130,8 @@ def test_401_message_points_to_key_docs(monkeypatch):
     with pytest.raises(AmwError) as excinfo:
         client.health()
     assert excinfo.value.status == 401
-    assert "KEY_PATH_PROPOSAL.md" in str(excinfo.value)
+    assert "POST /v1/demo/keys" in str(excinfo.value)
+    assert "https://www.agentmiddleware.dev/demo-key/" in str(excinfo.value)
     assert "bad" not in str(excinfo.value)
 
 

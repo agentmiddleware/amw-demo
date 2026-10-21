@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import threading
+from types import SimpleNamespace
 
 from amw_demo.cli import main as cli_main
 from amw_demo.client import AmwClient, extract_receipt_id
@@ -171,6 +172,7 @@ def test_permit_echo_retry_missing_key_exits_2():
     )
     assert proc.returncode == 2
     assert "AMW_API_KEY" in proc.stdout
+    assert "POST /v1/demo/keys" in proc.stdout
 
 
 def test_verify_example_offline():
@@ -187,6 +189,7 @@ def test_verify_example_offline():
     )
     assert proc.returncode == 0, proc.stderr
     assert "Verified" in proc.stdout
+    assert "reveal later edits but cannot prevent them" in proc.stdout
 
 
 class ScriptServer:
@@ -262,6 +265,40 @@ def _run_permit_script(env_extra):
         timeout=60,
         check=False,
     )
+
+
+def test_permit_echo_retry_success_uses_approved_copy(monkeypatch, capsys):
+    from examples import permit_echo_retry
+
+    class FakeClient:
+        base_url = "https://example.test"
+
+        def create_permit(self, **kwargs):
+            return {"permit_id": "permit-1"}
+
+        def invoke(self, *args, **kwargs):
+            return {"receipt": {"receipt_id": "receipt-1"}}
+
+        def portable_receipt(self, receipt_id):
+            return {}
+
+        def trust_keys(self):
+            return {}
+
+    monkeypatch.setenv("AMW_API_KEY", "test-key")
+    monkeypatch.setenv("AMW_WALLET_ID", "test-wallet")
+    monkeypatch.setattr("amw_demo.client.AmwClient", FakeClient)
+    monkeypatch.setattr(
+        "amw_demo.verify.verify_receipt",
+        lambda *args, **kwargs: SimpleNamespace(ok=True, receipt_id="receipt-1", kid="kid-1"),
+    )
+
+    assert permit_echo_retry.main() == 0
+    output = capsys.readouterr().out
+    assert (
+        "a retry with the same key returns the original receipt instead of "
+        "dispatching again."
+    ) in output
 
 
 def test_permit_echo_retry_401_exits_2_without_key_leak():

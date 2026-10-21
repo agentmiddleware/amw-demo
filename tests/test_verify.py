@@ -62,6 +62,7 @@ def test_wrong_kid_is_undetermined(receipt, keys):
     result = verify_receipt(bad, keys)
     assert not result.ok
     assert "unknown kid" in result.reason
+    assert "not in trust keys document" in result.reason
 
 
 def test_disabled_key_refused(receipt, keys):

@@ -32,11 +32,11 @@ def _b64decode(value: str) -> bytes:
 def _find_key(trust_keys: dict, kid: str) -> dict:
     keys = trust_keys.get("keys", [])
     if not isinstance(keys, list):
-        raise TypeError("trust-keys document has no 'keys' list")
+        raise TypeError("trust keys document has no 'keys' list")
     for entry in keys:
         if isinstance(entry, dict) and entry.get("kid") == kid:
             return entry
-    raise LookupError(f"no key with kid {kid!r} in trust-keys document")
+    raise LookupError(f"no key with kid {kid!r} in trust keys document")
 
 
 def _public_bytes(entry: dict) -> bytes:
@@ -54,7 +54,7 @@ def verify_receipt(
     trust_keys: dict,
     expected_issuer: str | None = None,
 ) -> VerificationResult:
-    """Verify one portable receipt bundle against a trust-keys document."""
+    """Verify one portable receipt bundle against a trust keys document."""
     try:
         signing_input = receipt["signing_input"]
         signature_b64 = receipt["signature"]
@@ -71,7 +71,7 @@ def verify_receipt(
     except LookupError:
         return VerificationResult(
             ok=False,
-            reason=f"unknown kid {kid!r}: not in trust-keys document",
+            reason=f"unknown kid {kid!r}: not in trust keys document",
             receipt_id=receipt_id,
             kid=kid,
             issuer=issuer,
