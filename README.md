@@ -7,8 +7,8 @@ Agent Middleware (AMW) is a hosted gateway that sits between AI agents and the t
 Needs Python 3.10 or newer.
 
 ```bash
-git clone https://github.com/agentmiddleware/agent-middleware
-cd agent-middleware
+git clone https://github.com/agentmiddleware/amw-demo.git
+cd amw-demo
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -55,7 +55,7 @@ the tool, retries with the same idempotency key and arguments, then
 verifies the receipt offline. It proves three things:
 
 1. A scoped permit authorizes one governed call within a small budget.
-2. a retry with the same key returns the original receipt instead of dispatching again.
+2. A retry with the same key returns the original receipt instead of dispatching again. A new key is a new request.
 3. The receipt signature checks out offline against the published keys.
 
 It does not prove the tool output was correct. Receipts sign hashes of the
