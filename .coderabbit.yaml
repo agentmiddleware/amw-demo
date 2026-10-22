@@ -51,10 +51,9 @@ reviews:
     - "!**/vendor/**"
     - "!**/_vendor/**"
     - "!**/third_party/**"
-    # Test snapshots and fixtures
+    # Test snapshots
     - "!**/__snapshots__/**"
     - "!**/*.snap"
-    - "!**/fixtures/**"
     # Large data and dumps
     - "!**/*.csv"
     - "!**/*.jsonl"
