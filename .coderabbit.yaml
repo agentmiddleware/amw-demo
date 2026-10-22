@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: false
+  high_level_summary_in_walkthrough: false
+  collapse_walkthrough: true
+  changed_files_summary: false
+  sequence_diagrams: false
+  related_issues: false
+  related_prs: false
+  suggested_labels: false
+  suggested_reviewers: false
+  in_progress_fortune: false
+  poem: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+    ignore_title_keywords:
+      - WIP
+      - "[skip review]"
+    ignore_usernames:
+      - dependabot[bot]
+      - renovate[bot]
+
+  path_filters:
+    # Lockfiles
+    - "!**/uv.lock"
+    - "!**/package-lock.json"
+    - "!**/pnpm-lock.yaml"
+    - "!**/yarn.lock"
+    - "!**/poetry.lock"
+    # Build output, packaging, caches, virtualenvs
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/*.egg-info/**"
+    - "!**/__pycache__/**"
+    - "!**/.venv/**"
+    - "!**/node_modules/**"
+    - "!**/.pytest_cache/**"
+    - "!**/.ruff_cache/**"
+    # Generated and vendored code
+    - "!**/generated/**"
+    - "!**/*_pb2.py"
+    - "!**/*_pb2_grpc.py"
+    - "!**/vendor/**"
+    - "!**/_vendor/**"
+    - "!**/third_party/**"
+    # Test snapshots and fixtures
+    - "!**/__snapshots__/**"
+    - "!**/*.snap"
+    - "!**/fixtures/**"
+    # Large data and dumps
+    - "!**/*.csv"
+    - "!**/*.jsonl"
+    - "!**/*.parquet"
+    - "!**/*.sql.gz"
+    - "!**/*.dump"
+    - "!**/dumps/**"
+    # Backups and temp files
+    - "!**/*.bak"
+    - "!**/*.orig"
+    - "!**/*~"
+    - "!**/backups/**"
+    - "!**/tmp/**"
+    # Minified assets
+    - "!**/*.min.js"
+    - "!**/*.min.css"
+    - "!**/*.map"
+
+  path_instructions:
+    - path: "amw_demo/**/*.py"
+      instructions: |
+        Demo client and offline receipt verifier for Agent Middleware (AMW).
+        Python >= 3.10, stdlib urllib for HTTP, `cryptography` is the only
+        runtime dependency. Do not suggest adding requests/httpx or an SDK.
+        Check:
+        - API usage: auth goes in the `X-API-Key` header only. Permit creation
+          sends `Idempotency-Key` as a header; invoke sends `idempotency_key`
+          in the JSON body and it is required. Flag any path that drops,
+          regenerates, or randomizes an idempotency key on retry, since a retry
+          must reuse the same key to be safe.
+        - Secrets: the API key comes from `AMW_API_KEY` or an explicit argument.
+          Flag any hardcoded key, any key in a default value, and any place the
+          key or auth headers reach an exception message, print, log, repr, or
+          error detail.
+        - Receipt verification (verify.py): Ed25519 must be checked over the
+          exact `signing_input` bytes, never a re-serialized payload. Disabled
+          or unknown key ids must fail closed. Issuer checks must not be
+          skippable when an expected issuer is given. Any change that can turn
+          a failure into `ok=True` is high severity.
+        - Errors: HTTP and network failures must surface as `AmwError` with a
+          useful message, not be swallowed.
+    - path: "examples/**/*.py"
+      instructions: |
+        Runnable examples for README readers. Light touch: only flag bugs,
+        leaked or hardcoded API keys, or code that would mislead a user about
+        correct idempotency or receipt verification. Skip style nitpicks.
+    - path: "tests/**/*.py"
+      instructions: |
+        pytest suite, runs offline in CI. Flag tests that assert nothing
+        meaningful (only "no exception", truthiness of a whole response, or
+        mocks asserting on themselves). Verification tests need negative
+        cases: tampered signature, tampered signing_input, unknown kid,
+        disabled key, issuer mismatch. Tests must not hit the network or need
+        a real API key. Flag any weakened or deleted assertion.
+
+chat:
+  art: false
+
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto
