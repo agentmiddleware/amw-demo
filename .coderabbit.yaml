@@ -106,8 +106,11 @@ reviews:
         meaningful (only "no exception", truthiness of a whole response, or
         mocks asserting on themselves). Verification tests need negative
         cases: tampered signature, tampered signing_input, unknown kid,
-        disabled key, issuer mismatch. Tests must not hit the network or need
-        a real API key. Flag any weakened or deleted assertion.
+        disabled key, issuer mismatch. Tests must not hit external networks
+        or need a real API key. Loopback HTTP fixture servers bound to
+        127.0.0.1 or localhost (for example http.server in a thread) are
+        allowed and preferred for exercising the urllib client; do not flag
+        them. Flag any weakened or deleted assertion.
 
 chat:
   art: false
