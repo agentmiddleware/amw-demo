@@ -1,0 +1,43 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dumps and local databases
+dumps/
+backups/
+*.dump
+*.sql
+*.sql.gz
+*.bak
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+
+# Build output and coverage
+dist/
+build/
+*.egg-info/
+coverage/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Dependencies, virtual environments, and caches
+node_modules/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tox/
+.nox/
