@@ -15,7 +15,7 @@ python3 -m venv .venv
 .venv/bin/python examples/verify_published_receipt.py --offline
 ```
 
-Use `python -m pytest` because the `pytest` launcher breaks when the path contains a space. If the package index is unreachable, `pip install --no-index --no-build-isolation -e '.[dev]'` works offline against a venv created with `--system-site-packages`.
+Use `python -m pytest` because the `pytest` launcher breaks when the path contains a space. If the package index is unreachable, create the venv with `python3 -m venv --system-site-packages .venv` instead and install with `.venv/bin/python -m pip install --no-index --no-build-isolation -e '.[dev]'`.
 
 Verified on Python 3.12.2: ruff clean, full suite 31 passed, build OK, offline receipt verification OK. Four tests bind a loopback socket, so sandboxes that block local sockets will fail them.
 
